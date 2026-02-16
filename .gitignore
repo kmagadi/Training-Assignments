@@ -1,0 +1,18 @@
+# Data files
+*.csv
+*.dat
+*.xlsx
+
+# Logs and databases
+*.log
+*.sqlite
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environments and Secrets
+.env
+venv/
+env/
+__pycache__/
