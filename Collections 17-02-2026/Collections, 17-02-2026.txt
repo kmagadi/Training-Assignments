@@ -1,0 +1,30 @@
+Collections
+Generic
+Backward Compatability
+Cursor in Java(Enumerator{Oldest}, Iterator{Most commonly used}, ListIterator{Advanced})
+
+Iterable Interface->
+	1.List{ArrayList, LinkedList, Vector - Stack}
+	2.Queue{PriorityQueue, Deque - ArrayDeque}
+	3.Set{HashSet, LinkedHashSet, SortedSet - TreeSet}
+
+Map
+   -HashTable
+   -LinkedHashMap
+   -HashMap
+   -SortedMap, TreeMap
+
+Virtual Thread
+JAVA Versions(8, 21, 25)
+Functional Interface(*){Predicate, Supplier, and Function}
+Marker Interface
+Default Methods
+Data type ranges
+Diff bw hashcode, equals(), and ==
+LinkedHashSet, LRU connection?!?!?
+CDN(Content Delivery Network), Caching(Hot Cache, Cold Cache)
+Auto-Scaling, Load-Balancing
+Streams in Java
+HashMap vs Concurrent HashMap(Compare & Swap, Collisions)
+
+JDBC, JPA, Spring Security, Hibernate
