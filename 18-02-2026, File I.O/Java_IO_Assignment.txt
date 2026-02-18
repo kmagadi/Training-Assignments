@@ -1,0 +1,34 @@
+1) you are given a large application log file (application.log) (Files should be generated first for it)
+Using path and files API :
+     count total number of INFO, WARN, ERROR
+     Extract all errors lines into a new file : error.log
+     Generate  a summary file summary.txt like below 
+              INFO = 120
+              WARN = 15
+              ERROR = 8
+
+
+2) Given a directory path , scan all files recursively.  (put some files in a directory in your system which are randomly created)
+       1. Count
+                Total files
+                Total Directories
+                Total File Size
+       2. List top 5 largest files 
+       3. Generate a report file report.txt
+   (Hint: Files.walk(), Files.size(), Path, Comparator.sorting)
+
+
+3) In a directory, multiple duplicate files may exist.
+      1. Detect duplicate files based on :
+             Same file size
+             Same content(Byte Comparison)
+      
+4) Given a CSV file:
+         id, name, salary
+          1, Alice, 50000
+          2, Bob, 70000
+          3, Charlie, 40000
+   
+   Calculate average salary, highest salary employee
+
+   Create new file processed.csv with 10% salary increment   
