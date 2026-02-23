@@ -1,0 +1,21 @@
+Process
+Thread
+Runnable Interface (Diff b/w Thread & Runnable), Callable
+Synchronization
+Future & CompletableFuture
+Thread pool & ExecutorService(difference)
+start() method cannot be overridden, run() should always be overridden
+Thread lifecycle
+Locks(Object, Class level -> static(class level), non-static(instance level)
+Volatile keyword
+Producer, Consumer problem
+Java8
+Daemon thread
+Memory leaks
+ExecutorService methods -> {submit(), execute(), shutdown()}
+Concurrent HashMap
+Gradle, Maven
+Asynchronous, Concurrency, Parallelism
+Lock
+ThreadPoolExecutor 
+CPU core, how it works(threads working w core)
