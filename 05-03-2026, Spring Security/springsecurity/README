@@ -1,0 +1,330 @@
+# Reactive JWT Authentication System using Spring Security and R2DBC
+
+## Overview
+
+This project implements a reactive REST API that provides secure authentication and authorization using Spring Boot, Spring Security, JWT, and R2DBC. The application allows users to register, log in, and access protected resources based on roles. Security is implemented using stateless JWT-based authentication, meaning the server does not maintain session data.
+
+The system uses Spring WebFlux to support reactive programming and Spring Data R2DBC for non-blocking database interactions. Passwords are securely stored using BCrypt encryption.
+
+## Technologies Used
+
+* Spring Boot
+* Spring WebFlux (Reactive stack)
+* Spring Security
+* JWT (JSON Web Token)
+* Spring Data R2DBC
+* H2 Database (or any R2DBC-supported database)
+* Lombok
+* Maven
+
+## Project Architecture
+
+The application follows a layered architecture separating responsibilities across different packages.
+
+```
+src/main/java/com/training/springsecurity
+│
+├── controller
+│   ├── AuthController
+│   └── UserController
+│
+├── service
+│   └── AuthService
+│
+├── repository
+│   └── UserRepository
+│
+├── security
+│   ├── JwtUtil
+│   ├── JwtAuthenticationFilter
+│   └── SecurityConfig
+│
+├── model
+│   └── User
+│
+└── dto
+    ├── RegisterRequest
+    ├── LoginRequest
+    ├── AuthResponse
+    └── ProfileResponse
+```
+
+### Controller Layer
+
+The controller layer exposes REST endpoints and handles incoming HTTP requests.
+
+AuthController handles authentication-related endpoints:
+
+* User registration
+* User login
+
+UserController handles protected endpoints:
+
+* Retrieving user profile
+* Admin access to user lists
+
+### Service Layer
+
+AuthService contains the business logic for authentication operations. It performs tasks such as:
+
+* Validating user credentials
+* Encrypting passwords
+* Generating JWT tokens
+* Preventing duplicate user registrations
+* Interacting with the repository layer
+
+All service operations return reactive types such as `Mono`.
+
+### Repository Layer
+
+UserRepository extends `ReactiveCrudRepository<User, Long>` and provides reactive access to the database.
+
+It allows operations such as:
+
+* Saving users
+* Retrieving users
+* Finding users by username
+
+Database queries return reactive streams (`Mono` or `Flux`).
+
+### Security Layer
+
+The security package implements JWT-based authentication and configures Spring Security.
+
+SecurityConfig defines:
+
+* Password encoder using BCrypt
+* Security rules for endpoints
+* Role-based access control
+* JWT authentication filter integration
+
+JwtAuthenticationFilter:
+
+* Intercepts incoming HTTP requests
+* Extracts the Authorization header
+* Parses the JWT token
+* Sets authentication in the reactive security context
+
+JwtUtil:
+
+* Generates JWT tokens after successful login
+* Encodes username and role into the token
+* In a production system, this would also validate and parse JWT tokens
+
+### Model Layer
+
+The User entity represents a user stored in the database.
+
+Fields:
+
+* id
+* username
+* password
+* role
+
+The model uses R2DBC annotations instead of JPA.
+
+### DTO Layer
+
+DTOs are used to transfer data between the client and server without exposing database entities.
+
+RegisterRequest: represents the registration request body
+LoginRequest: represents the login request body
+AuthResponse: returns the generated JWT token
+ProfileResponse: returns authenticated user information
+
+## Authentication Flow
+
+### User Registration
+
+Endpoint:
+
+```
+POST /auth/register
+```
+
+Process:
+
+1. Client sends username, password, and role.
+2. AuthService checks if the username already exists.
+3. Password is encrypted using BCryptPasswordEncoder.
+4. The user is saved in the database using ReactiveCrudRepository.
+
+### User Login
+
+Endpoint:
+
+```
+POST /auth/login
+```
+
+Process:
+
+1. Client submits username and password.
+2. The system retrieves the user from the database.
+3. The password is verified using BCrypt.
+4. If valid, a JWT token is generated and returned to the client.
+
+Example response:
+
+```
+{
+  "token": "JWT_TOKEN"
+}
+```
+
+### Accessing Protected APIs
+
+Clients must include the JWT token in the request header.
+
+Header format:
+
+```
+Authorization: Bearer <JWT_TOKEN>
+```
+
+JwtAuthenticationFilter intercepts the request, extracts the token, and populates the authentication context. Spring Security then checks authorization rules before allowing access to controllers.
+
+## Role-Based Authorization
+
+The system enforces role-based access using Spring Security.
+
+Security rules:
+
+* `/auth/register` and `/auth/login` are publicly accessible.
+* `/api/user/**` requires the USER role.
+* `/api/admin/**` requires the ADMIN role.
+* All other endpoints require authentication.
+
+## Available Endpoints
+
+### Register User
+
+```
+POST /auth/register
+```
+
+Example request:
+
+```
+{
+  "username": "john",
+  "password": "password123",
+  "role": "USER"
+}
+```
+
+### Login
+
+```
+POST /auth/login
+```
+
+Example request:
+
+```
+{
+  "username": "john",
+  "password": "password123"
+}
+```
+
+Example response:
+
+```
+{
+  "token": "JWT_TOKEN"
+}
+```
+
+### Get User Profile
+
+```
+GET /api/user/profile
+```
+
+Header:
+
+```
+Authorization: Bearer <JWT_TOKEN>
+```
+
+Response:
+
+```
+{
+  "username": "john",
+  "role": "USER"
+}
+```
+
+### Get All Users (Admin Only)
+
+```
+GET /api/admin/users
+```
+
+Header:
+
+```
+Authorization: Bearer <JWT_TOKEN>
+```
+
+Response:
+
+```
+[
+  {
+    "id": 1,
+    "username": "john",
+    "role": "USER"
+  }
+]
+```
+
+## How to Run the Project
+
+1. Clone the repository.
+
+2. Build the project.
+
+```
+mvn clean install
+```
+
+3. Run the Spring Boot application.
+
+```
+mvn spring-boot:run
+```
+
+The application will start on:
+
+```
+http://localhost:8080
+```
+
+## Testing the API
+
+The endpoints can be tested using tools such as Postman or curl.
+
+Typical workflow:
+
+1. Register a user.
+2. Log in to obtain a JWT token.
+3. Use the token in the Authorization header to access protected endpoints.
+
+## Key Concepts Demonstrated
+
+* Reactive REST API using Spring WebFlux
+* Reactive database access using R2DBC
+* Stateless authentication using JWT
+* Password encryption using BCrypt
+* Role-based authorization using Spring Security
+* Clean layered architecture
+
+## Conclusion
+
+This project demonstrates a secure authentication and authorization system built using reactive Spring technologies. The implementation showcases stateless JWT security, role-based access control, and non-blocking database operations using R2DBC.
+
+The architecture is modular and follows best practices, making it suitable as a foundation for building secure reactive microservices.
